@@ -1,8 +1,39 @@
 /* You can add global styles to this file, and also import other style files */
-
+@import "colors.scss";
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
   background-color: #eff2f5;
   font-weight: 300;
+}
+
+.title {
+  display: flex;
+  font-weight: 400;
+  align-items: flex-start;
+  h5 {
+    flex: auto;
+    margin-top: 10px;
+  }
+}
+
+.btn {
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  padding: 10px 20px;
+  transition: 0.2s all ease-in;
+  outline: none;
+  &.outlined {
+    border: 1px solid $gray;
+  }
+  &.round {
+    padding: 10px;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+  }
+  &:hover {
+    background-color: $gray;
+  }
 }

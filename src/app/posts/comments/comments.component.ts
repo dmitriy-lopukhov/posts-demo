@@ -16,9 +16,9 @@ import { trackingFn } from 'src/app/core/utils';
   styleUrls: ['./comments.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CommentsComponent implements OnInit {
+export class CommentsComponent {
   @Input() id: number | null = null;
-  comments$: Observable<Comment[]>;
+  comments$: Observable<Comment[] | null>;
   trackingFn = trackingFn;
 
   constructor(private commentsService: CommentsService) {
@@ -27,5 +27,7 @@ export class CommentsComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {}
+  delete(comment: Comment): void {
+    this.commentsService.deleteComment(comment.postId, comment.id);
+  }
 }

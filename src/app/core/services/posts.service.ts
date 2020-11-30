@@ -43,8 +43,8 @@ export class PostsService implements OnDestroy {
       .subscribe(
         () => {},
         () => {
-          this.setState(oldState);
           console.log('something went wrong');
+          this.setState(oldState);
         }
       );
   }

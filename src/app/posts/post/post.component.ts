@@ -22,6 +22,8 @@ export class PostComponent implements OnInit {
 
   toggleComments(id: number): void {
     this.expanded = !this.expanded;
-    this.loadComments.emit(id);
+    if (this.expanded) {
+      this.loadComments.emit(id);
+    }
   }
 }

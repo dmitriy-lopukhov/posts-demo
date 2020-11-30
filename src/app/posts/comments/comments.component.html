@@ -2,7 +2,10 @@
   class="comment"
   *ngFor="let comment of comments$ | async; trackBy: trackingFn"
 >
-  <h5>{{ comment.name }}</h5>
+  <div class="title">
+    <h5>{{ comment.name }}</h5>
+    <button class="btn round" (click)="delete(comment)">✕</button>
+  </div>
   <p>{{ comment.body }}</p>
   <p class="author">by {{ comment.email }}</p>
 </div>

@@ -1,36 +1,7 @@
-$gray: #dedede;
+@import "colors.scss";
 .post {
   margin: 20px;
   padding: 20px;
   border: 1px solid $gray;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
-  .title {
-    display: flex;
-    font-weight: 400;
-    align-items: flex-start;
-    h5 {
-      flex: auto;
-      margin-top: 10px;
-    }
-  }
-  .btn {
-    cursor: pointer;
-    background-color: transparent;
-    border: none;
-    padding: 10px 20px;
-    transition: 0.2s all ease-in;
-    outline: none;
-    &.outlined {
-      border: 1px solid $gray;
-    }
-    &.round {
-      padding: 10px;
-      border-radius: 50%;
-      width: 35px;
-      height: 35px;
-    }
-    &:hover {
-      background-color: $gray;
-    }
-  }
 }
