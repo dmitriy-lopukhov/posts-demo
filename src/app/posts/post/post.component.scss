@@ -1,0 +1,21 @@
+$gray: #dedede;
+.post {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid $gray;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+  .title {
+    font-weight: 400;
+  }
+  .btn {
+    cursor: pointer;
+    background-color: transparent;
+    border: 1px solid $gray;
+    padding: 10px 20px;
+    transition: 0.2s all ease-in;
+    outline: none;
+    &:hover {
+      background-color: $gray;
+    }
+  }
+}
