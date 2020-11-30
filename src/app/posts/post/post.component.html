@@ -1,13 +1,19 @@
 <div class="post" *ngIf="post">
   <div class="title">
     <h5>{{ post.id }} - {{ post.title }}</h5>
-    <button class="btn round" (click)="delete(post.id)">✕</button>
+    <app-button
+      label="✕"
+      btnClass="round"
+      (clicked)="delete(post.id)"
+    ></app-button>
   </div>
   <p>
     {{ post.body }}
   </p>
-  <button class="btn outlined" (click)="toggleComments(post.id)">
-    See comments
-  </button>
+  <app-button
+    label="See comments"
+    btnClass="outlined"
+    (clicked)="toggleComments(post.id)"
+  ></app-button>
   <app-comments *ngIf="expanded" [id]="post.id"></app-comments>
 </div>

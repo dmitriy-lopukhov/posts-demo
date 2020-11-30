@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
@@ -18,7 +18,7 @@ const initialState: State = {
 @Injectable({
   providedIn: 'root',
 })
-export class CommentsService {
+export class CommentsService implements OnDestroy {
   destroy$ = new Subject();
   private comments = new BehaviorSubject<CommentDict>(initialState);
   public readonly comments$ = this.comments.asObservable();
@@ -62,5 +62,9 @@ export class CommentsService {
       state[id] = comments;
     }
     this.comments.next(state);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
   }
 }

@@ -4,7 +4,11 @@
 >
   <div class="title">
     <h5>{{ comment.name }}</h5>
-    <button class="btn round" (click)="delete(comment)">✕</button>
+    <app-button
+      label="✕"
+      btnClass="round"
+      (clicked)="delete(comment)"
+    ></app-button>
   </div>
   <p>{{ comment.body }}</p>
   <p class="author">by {{ comment.email }}</p>
