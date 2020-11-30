@@ -1,7 +1,10 @@
 <div class="post" *ngIf="post">
-  <h5 class="title">{{ post.id }} - {{ post.title }}</h5>
+  <div class="title">
+    <h5>{{ post.id }} - {{ post.title }}</h5>
+    <button class="btn round" (click)="delete(post.id)">✕</button>
+  </div>
   <p>
     {{ post.body }}
   </p>
-  <button class="btn">See comments</button>
+  <button class="btn outlined">See comments</button>
 </div>

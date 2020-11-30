@@ -1,5 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+} from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil, tap } from 'rxjs/operators';
 import { PostsService } from '../core/services/posts.service';
 import { Post } from '../core/types/post';
 
@@ -9,11 +15,23 @@ import { Post } from '../core/types/post';
   styleUrls: ['./posts.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PostsComponent implements OnInit {
+export class PostsComponent implements OnDestroy {
+  destroy$ = new Subject();
   posts$: Observable<Post[]>;
-  constructor(private postsService: PostsService) {
-    this.posts$ = this.postsService.getPosts();
+
+  constructor(
+    private postsService: PostsService,
+    private cdf: ChangeDetectorRef
+  ) {
+    this.posts$ = this.postsService.posts$;
+    this.postsService.getPosts();
   }
 
-  ngOnInit(): void {}
+  onDeletePost(id: number): void {
+    this.postsService.deletePost(id);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+  }
 }

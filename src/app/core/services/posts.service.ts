@@ -1,29 +1,15 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { tap, finalize, map } from 'rxjs/operators';
-import { defaultPage, defaultPageLimit } from '../constants';
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { finalize, map, takeUntil } from 'rxjs/operators';
 import { Post } from '../types/post';
-
-type PostDict = { [id: number]: Post };
-
-type State = {
-  items: PostDict;
-  page: number;
-  pageLimit: number;
-};
-
-const inititalState: State = {
-  items: {},
-  page: defaultPage,
-  pageLimit: defaultPageLimit,
-};
 
 @Injectable({
   providedIn: 'root',
 })
-export class PostsService {
-  private posts = new BehaviorSubject<State>(inititalState);
+export class PostsService implements OnDestroy {
+  destroy$ = new Subject();
+  private posts = new BehaviorSubject<Post[]>([]);
   public readonly posts$ = this.posts
     .asObservable()
     .pipe(map((state) => Object.values(state)));
@@ -34,24 +20,33 @@ export class PostsService {
   constructor(private http: HttpClient) {}
 
   setState(posts: Post[]): void {
-    const state: State = {
-      ...this.posts.getValue(),
-      items: posts.reduce((res: PostDict, i) => {
-        res[i.id] = i;
-        return res;
-      }, {}),
-    };
-    console.log(state);
-    this.posts.next(state);
+    this.posts.next(posts);
   }
 
-  getPosts(): Observable<Post[]> {
+  getPosts(): void {
     this.loading.next(true);
-    return this.http
+    this.http
       .get<Post[]>(`https://jsonplaceholder.typicode.com/posts`)
       .pipe(
-        tap((posts) => this.setState(posts)),
-        finalize(() => this.loading.next(false))
+        finalize(() => this.loading.next(false)),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((posts) => this.setState(posts));
+  }
+
+  deletePost(id: number): void {
+    const oldState = this.posts.getValue();
+    const items = [...oldState].filter((i) => i.id !== id);
+    this.setState(items);
+    this.http
+      .delete<void>(`https://jsonplaceholder.typicode.com/posts/${id}`)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(
+        () => {},
+        () => {
+          this.setState(oldState);
+          console.log('something went wrong');
+        }
       );
   }
 
@@ -59,5 +54,9 @@ export class PostsService {
     return this.http.get<Post[]>(
       `https://jsonplaceholder.typicode.com/posts/${id}`
     );
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
   }
 }

@@ -1,1 +1,5 @@
-<app-post *ngFor="let post of posts$ | async" [post]="post"></app-post>
+<app-post
+  *ngFor="let post of posts$ | async"
+  [post]="post"
+  (deletePost)="onDeletePost($event)"
+></app-post>
