@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { finalize, map, takeUntil } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 import { Post } from '../types/post';
 
 @Injectable({
@@ -10,9 +11,7 @@ import { Post } from '../types/post';
 export class PostsService implements OnDestroy {
   destroy$ = new Subject();
   private posts = new BehaviorSubject<Post[]>([]);
-  public readonly posts$ = this.posts
-    .asObservable()
-    .pipe(map((state) => Object.values(state)));
+  public readonly posts$ = this.posts.asObservable();
 
   private loading = new BehaviorSubject<boolean>(false);
   public readonly loading$ = this.loading.asObservable();
@@ -26,7 +25,7 @@ export class PostsService implements OnDestroy {
   getPosts(): void {
     this.loading.next(true);
     this.http
-      .get<Post[]>(`https://jsonplaceholder.typicode.com/posts`)
+      .get<Post[]>(`${environment.apiUrl}/posts`)
       .pipe(
         finalize(() => this.loading.next(false)),
         takeUntil(this.destroy$)
@@ -39,7 +38,7 @@ export class PostsService implements OnDestroy {
     const items = [...oldState].filter((i) => i.id !== id);
     this.setState(items);
     this.http
-      .delete<void>(`https://jsonplaceholder.typicode.com/posts/${id}`)
+      .delete<void>(`${environment.apiUrl}/posts/${id}`)
       .pipe(takeUntil(this.destroy$))
       .subscribe(
         () => {},
@@ -51,9 +50,7 @@ export class PostsService implements OnDestroy {
   }
 
   getPost(id: number): Observable<Post[]> {
-    return this.http.get<Post[]>(
-      `https://jsonplaceholder.typicode.com/posts/${id}`
-    );
+    return this.http.get<Post[]>(`${environment.apiUrl}/posts/${id}`);
   }
 
   ngOnDestroy(): void {

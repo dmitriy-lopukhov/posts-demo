@@ -9,11 +9,19 @@ import { Post } from 'src/app/core/types/post';
 export class PostComponent implements OnInit {
   @Input() post: Post | null = null;
   @Output() deletePost = new EventEmitter<number>();
+  @Output() loadComments = new EventEmitter<number>();
+  expanded = false;
+
   constructor() {}
 
   ngOnInit(): void {}
 
   delete(id: number): void {
     this.deletePost.emit(id);
+  }
+
+  toggleComments(id: number): void {
+    this.expanded = !this.expanded;
+    this.loadComments.emit(id);
   }
 }

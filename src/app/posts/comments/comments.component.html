@@ -1,0 +1,8 @@
+<div
+  class="comment"
+  *ngFor="let comment of comments$ | async; trackBy: trackingFn"
+>
+  <h5>{{ comment.name }}</h5>
+  <p>{{ comment.body }}</p>
+  <p class="author">by {{ comment.email }}</p>
+</div>

@@ -6,5 +6,8 @@
   <p>
     {{ post.body }}
   </p>
-  <button class="btn outlined">See comments</button>
+  <button class="btn outlined" (click)="toggleComments(post.id)">
+    See comments
+  </button>
+  <app-comments *ngIf="expanded" [id]="post.id"></app-comments>
 </div>
