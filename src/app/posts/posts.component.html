@@ -1,6 +1,13 @@
-<app-post
-  *ngFor="let post of posts$ | async; trackBy: trackingFn"
-  [post]="post"
-  (deletePost)="onDeletePost($event)"
-  (loadComments)="onLoadComments($event)"
-></app-post>
+<div
+  infiniteScroll
+  [infiniteScrollDistance]="2"
+  [infiniteScrollThrottle]="20"
+  (scrolled)="onScroll()"
+>
+  <app-post
+    *ngFor="let post of posts$ | async; trackBy: trackingFn"
+    [post]="post"
+    (deletePost)="onDeletePost($event)"
+    (loadComments)="onLoadComments($event)"
+  ></app-post>
+</div>
