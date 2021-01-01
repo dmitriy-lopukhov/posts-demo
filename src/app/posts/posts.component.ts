@@ -3,7 +3,7 @@ import { Observable, Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { CommentsService } from '../core/services/comments.service';
 import { PostsService } from '../core/services/posts.service';
-import { Post } from '../core/types/post';
+import { Post, PostId } from '../core/types/post';
 import { trackingFn } from '../core/utils';
 
 @Component({
@@ -31,11 +31,11 @@ export class PostsComponent implements OnDestroy {
     this.postsService.getPosts();
   }
 
-  onDeletePost(id: number): void {
+  onDeletePost(id: PostId): void {
     this.postsService.deletePost(id);
   }
 
-  onLoadComments(id: number): void {
+  onLoadComments(id: PostId): void {
     this.commentsService.getComments(id);
   }
 

@@ -3,7 +3,8 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { Comment } from '../types/comment';
+import { Comment, CommentId } from '../types/comment';
+import { PostId } from '../types/post';
 
 type CommentDict = { [id: number]: Comment[] };
 
@@ -19,20 +20,20 @@ const initialState: State = {
   providedIn: 'root',
 })
 export class CommentsService implements OnDestroy {
-  destroy$ = new Subject();
+  private destroy$ = new Subject();
   private comments = new BehaviorSubject<CommentDict>(initialState);
   public readonly comments$ = this.comments.asObservable();
 
   constructor(private http: HttpClient) {}
 
-  getComments(id: number): void {
+  getComments(id: PostId): void {
     this.http
       .get<Comment[]>(`${environment.apiUrl}/posts/${id}/comments`)
       .pipe(takeUntil(this.destroy$))
       .subscribe((comments) => this.setState(comments, id));
   }
 
-  deleteComment(postId: number, commentId: number): void {
+  deleteComment(postId: PostId, commentId: CommentId): void {
     const oldState = this.comments.getValue();
     const newState = {
       ...oldState,
@@ -54,7 +55,7 @@ export class CommentsService implements OnDestroy {
       );
   }
 
-  setState(comments: Comment[], id?: number): void {
+  setState(comments: Comment[], id?: PostId): void {
     const state = {
       ...this.comments.getValue(),
     };

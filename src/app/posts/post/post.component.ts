@@ -6,8 +6,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { Post } from 'src/app/core/types/post';
-
+import { Post, PostId } from 'src/app/core/types/post';
 @Component({
   selector: 'app-post',
   templateUrl: './post.component.html',
@@ -16,19 +15,19 @@ import { Post } from 'src/app/core/types/post';
 })
 export class PostComponent implements OnInit {
   @Input() post: Post | null = null;
-  @Output() deletePost = new EventEmitter<number>();
-  @Output() loadComments = new EventEmitter<number>();
+  @Output() deletePost = new EventEmitter<PostId>();
+  @Output() loadComments = new EventEmitter<PostId>();
   expanded = false;
 
   constructor() {}
 
   ngOnInit(): void {}
 
-  delete(id: number): void {
+  delete(id: PostId): void {
     this.deletePost.emit(id);
   }
 
-  toggleComments(id: number): void {
+  toggleComments(id: PostId): void {
     this.expanded = !this.expanded;
     if (this.expanded) {
       this.loadComments.emit(id);

@@ -4,7 +4,7 @@ import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
 import { finalize, map, takeUntil } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { defaultPage, defaultPageLimit } from '../constants';
-import { Post } from '../types/post';
+import { Post, PostId } from '../types/post';
 
 type PagingState = {
   page: number;
@@ -20,7 +20,7 @@ const initialPagingState: PagingState = {
   providedIn: 'root',
 })
 export class PostsService implements OnDestroy {
-  destroy$ = new Subject();
+  private destroy$ = new Subject();
   private posts = new BehaviorSubject<Post[]>([]);
   public readonly posts$ = this.posts.asObservable();
 
@@ -53,7 +53,7 @@ export class PostsService implements OnDestroy {
       .subscribe((posts) => this.setState(posts));
   }
 
-  deletePost(id: number): void {
+  deletePost(id: PostId): void {
     const oldState = this.posts.getValue();
     const items = [...oldState].filter((i) => i.id !== id);
     this.setState(items);
@@ -69,7 +69,7 @@ export class PostsService implements OnDestroy {
       );
   }
 
-  getPost(id: number): Observable<Post[]> {
+  getPost(id: PostId): Observable<Post[]> {
     return this.http.get<Post[]>(`${environment.apiUrl}/posts/${id}`);
   }
 
