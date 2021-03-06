@@ -31,7 +31,7 @@
             "styles": ["src/styles.scss"],
             "scripts": [],
             "stylePreprocessorOptions": {
-              "includePaths": ["src"]
+              "includePaths": ["./src"]
             }
           },
           "configurations": {
@@ -90,7 +90,10 @@
             "karmaConfig": "karma.conf.js",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": ["src/styles.scss"],
-            "scripts": []
+            "scripts": [],
+            "stylePreprocessorOptions": {
+              "includePaths": ["./src"]
+            }
           }
         },
         "lint": {
@@ -119,5 +122,8 @@
       }
     }
   },
-  "defaultProject": "post-feed"
+  "defaultProject": "post-feed",
+  "cli": {
+    "analytics": "8e2b55d0-7cf3-4b95-acca-1286fc3f7722"
+  }
 }

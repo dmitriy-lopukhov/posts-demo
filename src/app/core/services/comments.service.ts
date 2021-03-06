@@ -24,10 +24,10 @@ export class CommentsService implements OnDestroy {
   private comments = new BehaviorSubject<CommentDict>(initialState);
   public readonly comments$ = this.comments.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private httpClient: HttpClient) {}
 
   getComments(id: PostId): void {
-    this.http
+    this.httpClient
       .get<Comment[]>(`${environment.apiUrl}/posts/${id}/comments`)
       .pipe(takeUntil(this.destroy$))
       .subscribe((comments) => this.setState(comments, id));
@@ -40,7 +40,7 @@ export class CommentsService implements OnDestroy {
       [postId]: oldState[postId].filter((i) => i.id !== commentId),
     };
     this.comments.next(newState);
-    this.http
+    this.httpClient
       .delete<void>(
         // there was no api to delete the comment, so i used delete handler for post just for the demo
         `${environment.apiUrl}/posts/${postId}/`

@@ -36,7 +36,7 @@ export class PostsService implements OnDestroy {
   private loading = new BehaviorSubject<boolean>(false);
   public readonly loading$ = this.loading.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private httpClient: HttpClient) {}
 
   setState(posts: Post[]): void {
     this.posts.next(posts);
@@ -44,7 +44,7 @@ export class PostsService implements OnDestroy {
 
   getPosts(): void {
     this.loading.next(true);
-    this.http
+    this.httpClient
       .get<Post[]>(`${environment.apiUrl}/posts`)
       .pipe(
         finalize(() => this.loading.next(false)),
@@ -57,7 +57,7 @@ export class PostsService implements OnDestroy {
     const oldState = this.posts.getValue();
     const items = [...oldState].filter((i) => i.id !== id);
     this.setState(items);
-    this.http
+    this.httpClient
       .delete<void>(`${environment.apiUrl}/posts/${id}`)
       .pipe(takeUntil(this.destroy$))
       .subscribe(
@@ -70,7 +70,7 @@ export class PostsService implements OnDestroy {
   }
 
   getPost(id: PostId): Observable<Post[]> {
-    return this.http.get<Post[]>(`${environment.apiUrl}/posts/${id}`);
+    return this.httpClient.get<Post[]>(`${environment.apiUrl}/posts/${id}`);
   }
 
   addPage(): void {

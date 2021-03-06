@@ -1,16 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { of } from 'rxjs';
 import { AppComponent } from './app.component';
+import { ClicksService } from './core/services/clicks.service';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule
-      ],
-      declarations: [
-        AppComponent
-      ],
+      imports: [RouterTestingModule],
+      declarations: [AppComponent],
+      providers: [ClicksService],
     }).compileComponents();
   });
 
@@ -26,10 +25,15 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('post-feed');
   });
 
-  it('should render title', () => {
+  it('should show clicks counter', () => {
     const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    app.count$ = of(3);
+
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('post-feed app is running!');
+    expect(compiled.querySelector('h3').textContent).toContain(
+      'Clicks counter: 3'
+    );
   });
 });

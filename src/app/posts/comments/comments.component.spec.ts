@@ -1,4 +1,6 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CommentsService } from 'src/app/core/services/comments.service';
 
 import { CommentsComponent } from './comments.component';
 
@@ -8,9 +10,10 @@ describe('CommentsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CommentsComponent ]
-    })
-    .compileComponents();
+      imports: [HttpClientTestingModule],
+      declarations: [CommentsComponent],
+      providers: [CommentsService],
+    }).compileComponents();
   });
 
   beforeEach(() => {

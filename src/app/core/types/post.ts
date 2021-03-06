@@ -9,6 +9,6 @@ export type Post = {
   userId: number;
 };
 
-export const getPostId = (input: number) => {
+export const assertPostId = (input: number) => {
   return input as PostId;
 };

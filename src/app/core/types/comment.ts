@@ -10,3 +10,7 @@ export type Comment = {
   name: string;
   postId: PostId;
 };
+
+export const assertCommentId = (input: number) => {
+  return input as CommentId;
+};
