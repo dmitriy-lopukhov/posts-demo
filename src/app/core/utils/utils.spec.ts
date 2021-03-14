@@ -3,13 +3,22 @@ import { trackingFn } from '.';
 const testItem: Parameters<typeof trackingFn>[1] = {
   id: 123,
 };
+const index = 5;
 
-describe('Utils', () => {
+describe('Utils: trackingFn', () => {
   it('trackingFn should return id as index', () => {
-    expect(trackingFn(1, testItem) === 123).toBeTruthy();
+    expect(trackingFn(index, testItem) === 123).toBeTruthy();
   });
 
   it('trackingFn should return index', () => {
-    expect(trackingFn(5, {} as any) === 5).toBeTruthy();
+    expect(trackingFn(index, {} as any)).toBe(index);
+  });
+
+  it('trackingFn should return index if id === NaN', () => {
+    expect(trackingFn(index, { id: NaN })).toBe(index);
+  });
+
+  it('trackingFn should return index if id === null', () => {
+    expect(trackingFn(index, { id: null } as any)).toBe(index);
   });
 });

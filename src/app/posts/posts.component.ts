@@ -1,6 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { CommentsService } from '../core/services/comments.service';
 import { PostsService } from '../core/services/posts.service';
 import { Post, PostId } from '../core/types/post';
@@ -12,19 +17,19 @@ import { trackingFn } from '../core/utils';
   styleUrls: ['./posts.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PostsComponent implements OnDestroy {
+export class PostsComponent implements OnInit, OnDestroy {
   destroy$ = new Subject();
-  posts$: Observable<Post[]>;
+  posts$: Observable<Post[]> | null = null;
   isEnd = false;
   trackingFn = trackingFn;
 
   constructor(
     private postsService: PostsService,
     private commentsService: CommentsService
-  ) {
-    this.posts$ = this.postsService.postsByPage$.pipe(
-      tap((data) => console.log(data))
-    );
+  ) {}
+
+  ngOnInit(): void {
+    this.posts$ = this.postsService.postsByPage$;
     this.postsService.isEnd$
       .pipe(takeUntil(this.destroy$))
       .subscribe((isEnd) => (this.isEnd = isEnd));

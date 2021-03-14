@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 
 const storageKey = 'clicksCache';
 
-const isLocalStorageAvailable = () => {
+export function isLocalStorageAvailable() {
   const test = '__test__';
   try {
     localStorage.setItem(test, test);
@@ -12,15 +12,15 @@ const isLocalStorageAvailable = () => {
   } catch (e) {
     return false;
   }
-};
+}
 
-const getItem = (): number => {
+function getItem(): number {
   return +(localStorage.getItem(storageKey) || 0);
-};
+}
 
-const setItem = (count: number) => {
+function setItem(count: number) {
   localStorage.setItem(storageKey, count.toString());
-};
+}
 
 @Injectable({
   providedIn: 'root',
@@ -28,6 +28,7 @@ const setItem = (count: number) => {
 export class ClicksService {
   private clicks = new BehaviorSubject<number>(getItem());
   public readonly clicks$ = this.clicks.asObservable();
+  setItem = setItem;
 
   constructor() {}
 
@@ -35,7 +36,7 @@ export class ClicksService {
     const count = this.clicks.getValue() + 1;
     this.clicks.next(count);
     if (isLocalStorageAvailable()) {
-      setItem(count);
+      this.setItem(count);
     }
   }
 }

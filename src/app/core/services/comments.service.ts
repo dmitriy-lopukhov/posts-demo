@@ -6,22 +6,14 @@ import { environment } from 'src/environments/environment';
 import { Comment, CommentId } from '../types/comment';
 import { PostId } from '../types/post';
 
-type CommentDict = { [id: number]: Comment[] };
-
-type State = {
-  comments: CommentDict;
-};
-
-const initialState: State = {
-  comments: {},
-};
+type CommentsState = { [id: number]: Comment[] };
 
 @Injectable({
   providedIn: 'root',
 })
 export class CommentsService implements OnDestroy {
-  private destroy$ = new Subject();
-  private comments = new BehaviorSubject<CommentDict>(initialState);
+  destroy$ = new Subject();
+  private comments = new BehaviorSubject<CommentsState>({});
   public readonly comments$ = this.comments.asObservable();
 
   constructor(private httpClient: HttpClient) {}
@@ -34,10 +26,14 @@ export class CommentsService implements OnDestroy {
   }
 
   deleteComment(postId: PostId, commentId: CommentId): void {
-    const oldState = this.comments.getValue();
-    const newState = {
+    const oldState: CommentsState = this.comments.getValue();
+    const comments = oldState[postId]
+      ? oldState[postId].filter((i) => i.id !== commentId)
+      : [];
+
+    const newState: CommentsState = {
       ...oldState,
-      [postId]: oldState[postId].filter((i) => i.id !== commentId),
+      [postId]: comments,
     };
     this.comments.next(newState);
     this.httpClient
@@ -55,12 +51,12 @@ export class CommentsService implements OnDestroy {
       );
   }
 
-  setState(comments: Comment[], id?: PostId): void {
-    const state = {
+  setState(comments: Comment[], postId?: PostId): void {
+    const state: CommentsState = {
       ...this.comments.getValue(),
     };
-    if (id) {
-      state[id] = comments;
+    if (typeof postId === 'number' && !isNaN(postId)) {
+      state[postId] = comments;
     }
     this.comments.next(state);
   }

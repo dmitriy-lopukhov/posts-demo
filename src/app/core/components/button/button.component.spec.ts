@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
+import { ClicksService } from '../../services/clicks.service';
 
 import { ButtonComponent } from './button.component';
 
@@ -8,17 +10,23 @@ const btnClass: ButtonComponent['btnClass'] = 'outlined';
 describe('ButtonComponent', () => {
   let component: ButtonComponent;
   let fixture: ComponentFixture<ButtonComponent>;
+  let clicksService: any;
 
   beforeEach(async () => {
+    clicksService = {
+      clicks$: of(3),
+      addClick() {},
+    };
+
     await TestBed.configureTestingModule({
       declarations: [ButtonComponent],
+      providers: [{ provide: ClicksService, useValue: clicksService }],
     }).compileComponents();
   });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ButtonComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
@@ -26,10 +34,7 @@ describe('ButtonComponent', () => {
   });
 
   it('should have label', () => {
-    const fixture = TestBed.createComponent(ButtonComponent);
-    const btn = fixture.componentInstance;
-    btn.label = testLabel;
-
+    component.label = testLabel;
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
     expect(compiled.querySelector('button').textContent).toContain(
@@ -38,9 +43,7 @@ describe('ButtonComponent', () => {
   });
 
   it('should have outlined class', () => {
-    const fixture = TestBed.createComponent(ButtonComponent);
-    const btn = fixture.componentInstance;
-    btn.btnClass = btnClass;
+    component.btnClass = btnClass;
 
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
@@ -50,11 +53,24 @@ describe('ButtonComponent', () => {
   });
 
   it('should test click', () => {
-    const fixture = TestBed.createComponent(ButtonComponent);
-    const btn = fixture.componentInstance;
-    spyOn(btn, 'handleClick');
+    spyOn(component, 'handleClick');
     const compiled = fixture.nativeElement;
     compiled.querySelector('button').click();
-    expect(btn.handleClick).toHaveBeenCalled();
+    expect(component.handleClick).toHaveBeenCalled();
+  });
+
+  it('click event should be emited', () => {
+    spyOn(component.clicked, 'next');
+    component.handleClick();
+    expect(component.clicked.next).toHaveBeenCalled();
+  });
+
+  it('clicksService should increase click count', () => {
+    spyOn(clicksService, 'addClick');
+    component.handleClick();
+    expect(clicksService.addClick).toHaveBeenCalled();
+    clicksService.clicks$.subscribe((value: number) => {
+      expect(value).toBeGreaterThan(0);
+    });
   });
 });

@@ -20,7 +20,7 @@ const initialPagingState: PagingState = {
   providedIn: 'root',
 })
 export class PostsService implements OnDestroy {
-  private destroy$ = new Subject();
+  destroy$ = new Subject();
   private posts = new BehaviorSubject<Post[]>([]);
   public readonly posts$ = this.posts.asObservable();
 
@@ -67,10 +67,6 @@ export class PostsService implements OnDestroy {
           this.setState(oldState);
         }
       );
-  }
-
-  getPost(id: PostId): Observable<Post[]> {
-    return this.httpClient.get<Post[]>(`${environment.apiUrl}/posts/${id}`);
   }
 
   addPage(): void {

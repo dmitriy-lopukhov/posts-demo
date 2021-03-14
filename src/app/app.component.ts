@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import { ClicksService } from './core/services/clicks.service';
 
 @Component({
@@ -8,11 +8,13 @@ import { ClicksService } from './core/services/clicks.service';
   styleUrls: ['./app.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'post-feed';
-  count$: Observable<number>;
+  count$: Observable<number> | null = null;
 
-  constructor(private clicksService: ClicksService) {
+  constructor(public clicksService: ClicksService) {}
+
+  ngOnInit(): void {
     this.count$ = this.clicksService.clicks$;
   }
 }
